@@ -75,8 +75,8 @@ Se quiser validar o projeto na sua máquina:
 
 ```bash
 # 1. Crie o ambiente virtual e ative-o:
-python3 -m venv .venv
-source .venv/bin/activate  # ou .venv\Scripts\Activate.ps1 no Windows
+python3 -m venv .pyenv
+source .pyenv/bin/activate  # ou .pyenv\Scripts\Activate.ps1 no Windows
 
 # 2. Instale as dependências:
 pip install -r requirements.txt
