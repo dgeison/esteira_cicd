@@ -1,0 +1,50 @@
+name: Esteira CI/CD Python baseada em GitHub Actions
+
+on:
+  push:
+    branches: [main, feature/esteira]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Lint
+        run: flake8 app tests
+
+      - name: Run Tests
+        run: pytest
+
+      - name: Run Quality Gate (Mypy)
+        run: mypy app
+
+      - name: Run Pipeline
+        run: python app/pipeline.py
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: summary-csv
+          path: output/summary.csv
+
+  deploy:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Simulation
+        run: |
+          echo "Promovendo artefato para produção..."
+          echo "Deploy concluído com sucesso!"
